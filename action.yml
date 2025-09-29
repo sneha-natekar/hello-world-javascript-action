@@ -5,6 +5,10 @@ inputs:
     description: 'Who to greet'
     required: true
     default: 'World'
+  language:  # id of input
+    description: 'Language for greeting (en, fr, es)'
+    required: false
+    default: 'en'
 outputs:
   time: # id of output
     description: 'The time we greeted you'
