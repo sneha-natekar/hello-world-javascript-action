@@ -31815,6 +31815,7 @@ const core = __nccwpck_require__(7484);
 const github = __nccwpck_require__(3228);
 
 // Internationalization translations
+const DEFAULT_LANGUAGE = 'en';
 const translations = {
   en: { hello: 'Hello' },
   fr: { hello: 'Bonjour' },
@@ -31824,10 +31825,10 @@ const translations = {
 try {
   // `who-to-greet` input defined in action metadata file
   const nameToGreet = core.getInput('who-to-greet');
-  const language = core.getInput('language') || 'en';
+  const language = core.getInput('language') || DEFAULT_LANGUAGE;
   
   // Get greeting based on language, default to English if language not found
-  const greeting = (translations[language] || translations.en).hello;
+  const greeting = (translations[language] || translations[DEFAULT_LANGUAGE]).hello;
   
   console.log(`${greeting} ${nameToGreet}!`);
   const time = (new Date()).toTimeString();
