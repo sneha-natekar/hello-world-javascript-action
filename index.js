@@ -8,24 +8,27 @@ const github = require('@actions/github');
  */
 function getUserFriendlyErrorMessage(error) {
   const errorMessage = error.message || '';
+  const errorName = error.name || '';
   
-  // Input-related errors
-  if (errorMessage.includes('Input required') || errorMessage.includes('who-to-greet')) {
+  // Input-related errors - check for specific @actions/core error pattern
+  if (errorMessage.includes('Input required and not supplied') || errorMessage.includes('who-to-greet')) {
     return `❌ Missing required input: The 'who-to-greet' parameter is required but was not provided. Please specify who you want to greet in your workflow configuration.`;
   }
   
-  // GitHub context errors
-  if (errorMessage.includes('context') || errorMessage.includes('payload')) {
+  // GitHub context errors - be more specific
+  if (errorMessage.includes('github.context') || 
+      (errorMessage.includes('payload') && errorMessage.includes('undefined'))) {
     return `❌ GitHub context error: Unable to access GitHub workflow context or event payload. This might occur if the action is not running in a proper GitHub Actions environment. Error details: ${errorMessage}`;
   }
   
-  // Output setting errors
-  if (errorMessage.includes('setOutput') || errorMessage.includes('output')) {
+  // Output setting errors - check for core.setOutput errors
+  if (errorMessage.includes('Unable to') && errorMessage.includes('output')) {
     return `❌ Output error: Failed to set the action output. This could be due to permissions or environment issues. Error details: ${errorMessage}`;
   }
   
   // JSON parsing errors
-  if (errorMessage.includes('JSON') || errorMessage.includes('parse')) {
+  if (errorName === 'SyntaxError' || errorMessage.includes('JSON.parse') || 
+      errorMessage.includes('Unexpected token') || errorMessage.includes('JSON')) {
     return `❌ Data format error: Failed to process GitHub event data. The payload might be malformed. Error details: ${errorMessage}`;
   }
   
@@ -41,7 +44,7 @@ try {
   core.setOutput("time", time);
   
   // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
+  const payload = JSON.stringify(github.context.payload, undefined, 2);
   console.log(`The event payload: ${payload}`);
   
 } catch (error) {

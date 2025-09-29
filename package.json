@@ -4,7 +4,7 @@
   "description": "javascript action repo",
   "main": "index.js",
   "scripts": {
-    "build": "ncc build index.js -o dist",
+    "build": "ncc build index.js -o dist --source-map --minify",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
