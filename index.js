@@ -22,7 +22,8 @@ function getUserFriendlyErrorMessage(error) {
   }
   
   // Output setting errors - check for core.setOutput errors
-  if (errorMessage.includes('Unable to') && errorMessage.includes('output')) {
+  if ((errorMessage.includes('setOutput') && errorMessage.includes('Unable to')) || 
+      (errorMessage.includes('output') && errorMessage.includes('write'))) {
     return `❌ Output error: Failed to set the action output. This could be due to permissions or environment issues. Error details: ${errorMessage}`;
   }
   
